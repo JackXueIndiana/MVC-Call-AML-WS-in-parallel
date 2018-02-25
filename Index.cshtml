@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "Fault Codes Predected by Engine Oil";
+}
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+
+    function Search() {
+        //debugger;
+        var soot = $("#soot").val();
+        var kv100 = $("#kv100").val();
+        var aluminum = $("#aluminum").val();
+        var chromium = $("#chromium").val();
+        var copper = $("#copper").val();
+        var iron = $("#iron").val();
+        var lead = $("#lead").val();
+        var tin = $("#tin").val();
+        var nickel = $("#nickel").val();
+        var silicon = $("#silicon").val();
+        var sodium = $("#sodium").val();
+        var potassium = $("#potassium").val();
+        var miles = $("#miles").val();
+        $.post('/home/search',
+        {
+            soot:soot,
+            kv100:kv100,
+            aluminum:aluminum,
+            chromium:chromium,
+            copper:copper,
+            iron:iron,
+            lead:lead,
+            tin:tin,
+            nickel:nickel,
+            silicon:silicon,
+            sodium:sodium,
+            potassium:potassium,
+            miles:miles
+        },
+        function (samples) {
+            //debugger;
+            var searchResultsHTML = "<tr>";
+            searchResultsHTML += "<td>Fault Code</td>";
+            searchResultsHTML += "<td>Scored Label</td>";
+            searchResultsHTML += "<td>Scored Probability</td>";
+            searchResultsHTML += "</tr>";
+
+            for (var i = 0; i < samples.length; i++) {
+                searchResultsHTML += "<tr>";
+                searchResultsHTML += "<td onclick=\"this.style.backgroundColor='gray'; clickedSearch(this.innerHTML);\">" + samples[i].fc + "</td>";
+                searchResultsHTML += "<td>" + samples[i].scoreLable + "</td>";
+                searchResultsHTML += "<td>" + samples[i].probability + "</td>";
+                searchResultsHTML += "</tr>";
+            }
+
+            $("#searchResults").html(searchResultsHTML);
+
+        });
+
+        function parseJsonDate(jsonDateString) {
+            if (jsonDateString != null)
+                return new Date(parseInt(jsonDateString.replace('/Date(', '')));
+            else
+                return "";
+        }
+    };
+
+    function clickedSearch(fc) {
+        if (fc == null) {
+            return;
+        }
+
+        $.post('/home/clicksearch',
+        {
+            fc: fc
+        },
+        function (data) {
+            debugger;
+            var suggestSearchResultsHTML = "<tr><td>Fault Code</td>";
+            suggestSearchResultsHTML += "<td>Related FC 1</td>";
+            suggestSearchResultsHTML += "<td>Related FC 2</td>";
+            suggestSearchResultsHTML += "<td>Related FC 3</td>";
+            suggestSearchResultsHTML += "<td>Related FC 4</td>";
+            suggestSearchResultsHTML += "<td>Related FC 5</td></tr>";
+            if (data != null) {
+                suggestSearchResultsHTML += "<tr>";
+                suggestSearchResultsHTML += "<td>" + data.fc + "</td>";
+                suggestSearchResultsHTML += "<td>" + data.rfc1 + "</td>";
+                suggestSearchResultsHTML += "<td>" + data.rfc2 + "</td>";
+                suggestSearchResultsHTML += "<td>" + data.rfc3 + "</td>";
+                suggestSearchResultsHTML += "<td>" + data.rfc4 + "</td>";
+                suggestSearchResultsHTML += "<td>" + data.rfc5 + "</td></tr>";
+            }
+            $("#suggestSearchResults").html(suggestSearchResultsHTML);
+        });
+    };
+</script>
+
+<table>
+    <tr>
+        <td>
+            <img id="img_logo" alt="@Url.Content("http://www.cummins.com")" src="@Url.Content("~/Content/Images/cummins_logo.jpg")" width="40" height="40" />
+        </td>
+        <td>
+            <h1> Fault Codes Predected by Engine Oil</h1>
+        </td>
+    </tr>
+</table>
+
+<h>Chemicals in Engine Oil:</h>
+<div class="container">
+    <table>
+        <tr>
+            <td>SOOT:</td>
+            <td>0 <input type="range" id="soot" name="soot" min="0" max="4" step="0.1" value="0"> 4</td>
+            <td>
+                KV100:
+            </td>
+            <td>0 <input type="range" id="kv100" name="kv100" min="0" max="19" step="1" value="0"> 19</td>
+        </tr>
+        <tr>
+            <td>
+                ALUMINUM:
+            </td>
+            <td>0 <input type="range" id="aluminum" name="aluminum" min="0" max="58" step="1" value="0"> 58</td>
+
+            <td>
+                CHROMIUM:
+            </td>
+            <td>0 <input type="range" id="chromium" name="chromium" min="0" max="11" step="1" value="0"> 11</td>
+        </tr>
+        <tr>
+            <td>
+                COPPER:
+            </td>
+            <td>0 <input type="range" id="copper" name="copper" min="0" max="61" step="1" value="0"> 61</td>
+
+            <td>
+                IRON:
+            </td>
+            <td>0 <input type="range" id="iron" name="iron" min="0" max="159" step="1" value="0"> 159</td>
+        </tr>
+        <tr>
+            <td>
+                LEAD:
+            </td>
+            <td>0 <input type="range" id="lead" name="lead" min="0" max="228" step="1" value="0"> 228</td>
+
+            <td>
+                TIN:
+            </td>
+            <td>0 <input type="range" id="tin" name="tin" min="0" max="6" step="0.1" value="0"> 6</td>
+        </tr>
+        <tr>
+            <td>
+                NICKEL:
+            </td>
+            <td>0 <input type="range" id="nickel" name="nickel" min="0" max="1" step="0.1" value="0"> 1</td>
+
+            <td>
+                SILICON:
+            </td>
+            <td>0 <input type="range" id="silicon" name="silicon" min="0" max="42" step="1" value="0"> 42</td>
+        </tr>
+        <tr>
+            <td>
+                SODIUM:
+            </td>
+            <td>0 <input type="range" id="sodium" name="sodium" min="0" max="593" step="1" value="0"> 593</td>
+
+            <td>
+                POTASSIUM:
+            </td>
+            <td>0 <input type="range" id="potassium" name="potassium" min="0" max="1632" step="1" value="0"> 1632</td>
+        </tr>
+        <tr>
+            <td>
+                MILES:
+            </td>
+            <td>
+                0 <input type="range" id="miles" name="miles" min="0" max="1762300" step="1" value="0"> 1762300
+            </td>
+            <td></td>
+            <td>
+                <center><button onclick="Search();">Submit</button></center>
+            </td>
+        </tr>
+    </table>
+</div>
+<br />
+<h>Fault Codes Based on Boosted Decision Tree Models. Select one to see related ones</h>
+<div class="container">
+    <div class="row">
+        <table id="searchResults" border="1"></table>
+    </div>
+</div>
+
+<br />
+
+<h>Fault Code and Its Related Ones Based on Recommendation Model</h>
+<div class="container">
+    <div class="row">
+        <table id="suggestSearchResults" border="1"></table>
+    </div>
+</div>

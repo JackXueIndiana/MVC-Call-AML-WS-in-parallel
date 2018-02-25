@@ -1,7 +1,7 @@
 # MVC-Call-AML-WS-in-parallel
 This articel is to show you how we can call multiple Azure Machine Learning web services in parallel from a C# MVC application. 
 
-For calling the a number of AML web services in parallel, we create a method in Controller class in this prototype:
+For calling a number of AML web services in parallel, we create a method in Controller class in this prototype:
  async Task<T> PerformAMLWSCall(string url, string key, <your data>) in this method an HttpClient is created and used locally.
 Then in action method, public async Task<ActionResult> Search(<your data>), we call the method PerformAMLWSCall with different url, key and your data. 
 
